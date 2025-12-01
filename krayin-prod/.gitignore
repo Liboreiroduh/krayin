@@ -4,9 +4,10 @@
 /storage/app/*
 /storage/framework/cache/data/*
 /storage/framework/sessions/*
+/storage/framework/views/*
 /storage/logs/*
 /bootstrap/cache/*.php
-/.env
+.env
 /src/vendor/
 /src/node_modules/
 /src/storage/*.key
