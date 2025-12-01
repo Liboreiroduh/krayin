@@ -4,7 +4,7 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
-    libc-client-dev \
+    libc-client2007e-dev \
     libkrb5-dev \
     zip unzip git curl libonig-dev libxml2-dev \
     && docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
