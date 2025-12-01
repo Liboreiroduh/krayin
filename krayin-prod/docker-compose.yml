@@ -1,0 +1,67 @@
+version: '3.9'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: krayin-app
+    restart: always
+    volumes:
+      - ./src:/var/www
+    environment:
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - APP_KEY=${APP_KEY}
+    depends_on:
+      - mysql
+
+  nginx:
+    image: nginx:stable
+    container_name: krayin-nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./src:/var/www
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+
+  mysql:
+    image: mysql:8.0
+    container_name: krayin-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  queue:
+    build:
+      context: .
+    container_name: krayin-queue
+    command: php artisan queue:work --tries=3
+    volumes:
+      - ./src:/var/www
+    depends_on:
+      - app
+      - mysql
+
+  scheduler:
+    build:
+      context: .
+    container_name: krayin-scheduler
+    command: >
+      sh -c "while true; do php artisan schedule:run; sleep 60; done"
+    volumes:
+      - ./src:/var/www
+    depends_on:
+      - app
+      - mysql
+
+volumes:
+  mysql_data:
