@@ -7,6 +7,15 @@
 /storage/logs/*
 /bootstrap/cache/*.php
 /.env
+/src/vendor/
+/src/node_modules/
+/src/storage/*.key
+/src/storage/app/*
+/src/storage/framework/cache/data/*
+/src/storage/framework/sessions/*
+/src/storage/logs/*
+/src/bootstrap/cache/*.php
+/src/.env
 /.phpunit.result.cache
 /phpunit.xml
 /.idea

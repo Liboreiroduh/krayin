@@ -1,22 +1,24 @@
-version: '3.9'
-
 services:
   app:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: krayin-app
-    image: krayin-app:latest
-    deploy:
-      restart_policy:
-        condition: on-failure
     restart: always
+    working_dir: /var/www
     volumes:
       - ./src:/var/www
     environment:
-      - APP_ENV=production
-      - APP_DEBUG=false
-      - APP_KEY=${APP_KEY}
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_KEY: ${APP_KEY}
+      APP_URL: ${APP_URL}
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
     depends_on:
       - mysql
 
@@ -45,31 +47,31 @@ services:
       - mysql_data:/var/lib/mysql
 
   queue:
-    image: krayin-app:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: krayin-queue
-    depends_on:
-      app:
-        condition: service_started
-      mysql:
-        condition: service_started
-    command: php artisan queue:work --tries=3
+    restart: always
+    working_dir: /var/www
     volumes:
       - ./src:/var/www
-    restart: always
+    depends_on:
+      - mysql
+    command: php artisan queue:work --tries=3
 
   scheduler:
-    image: krayin-app:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: krayin-scheduler
-    depends_on:
-      app:
-        condition: service_started
-      mysql:
-        condition: service_started
-    command: >
-      sh -c "while true; do php artisan schedule:run; sleep 60; done"
+    restart: always
+    working_dir: /var/www
     volumes:
       - ./src:/var/www
-    restart: always
+    depends_on:
+      - mysql
+    command: >
+      sh -c "while true; do php artisan schedule:run; sleep 60; done"
 
 volumes:
   mysql_data:
