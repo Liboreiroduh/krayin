@@ -12,6 +12,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www
 
 COPY src/ ./
+RUN chmod -R 775 storage bootstrap/cache
 
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 
