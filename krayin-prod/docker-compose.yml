@@ -42,9 +42,6 @@ services:
       - mysql_data:/var/lib/mysql
 
   queue:
-    build:
-      context: .
-      dockerfile: Dockerfile
     image: krayin-app
     container_name: krayin-queue
     command: php artisan queue:work --tries=3
@@ -56,9 +53,6 @@ services:
     restart: always
 
   scheduler:
-    build:
-      context: .
-      dockerfile: Dockerfile
     image: krayin-app
     container_name: krayin-scheduler
     command: >
