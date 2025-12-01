@@ -4,11 +4,8 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
-    libc-client2007e-dev \
-    libkrb5-dev \
     zip unzip git curl libonig-dev libxml2-dev \
-    && docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
-    && docker-php-ext-install pdo pdo_mysql mbstring gd xml imap
+    && docker-php-ext-install pdo pdo_mysql mbstring gd xml
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
